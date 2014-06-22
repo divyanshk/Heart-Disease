@@ -1,0 +1,10 @@
+,,,,
+,No of hidden units ,Train Data Accuracy,Test Data Accuracy,f1 score
+Neural Net BackPropagation,150,90~92%,83~85%,0.85
+,,,,
+RBF K-Means*,50,78~84%,78~84%,0.82
+,Sigma,,,
+GRNN,1.3#,~~,88.90%,0.88
+,,,,
+*still have to look into for better stability,,,,
+#best possible sigma ,,,,

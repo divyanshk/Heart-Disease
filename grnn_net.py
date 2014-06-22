@@ -6,7 +6,7 @@ from scipy.linalg 				 import pinv
 from pybrain.datasets            import ClassificationDataSet
 from pybrain.utilities           import percentError
 from sklearn 					 import preprocessing
-
+from sklearn.metrics    		 import f1_score
 class GRNN:
 
 	def __init__(self, indim, outdim):
@@ -72,6 +72,17 @@ def main():
 
 	tstresult = percentError(Y_predicted,alltestdata['class'])
 	print "Accuracy on test data is: %5.3f%%," % (100-tstresult)
+	
+	for x in range(len(y_test)):
+		if any(y_test[x]) == True:
+			y_test[x] = 1
+		else:
+			y_test[x] = 0
+
+	average_label = ['micro','macro','weighted']
+	for label in average_label: 
+		f1 = f1_score(y_test, Y_predicted, average=label)
+		print "f1 score (%s)" %label, "is ", f1
 
 if __name__ == '__main__':
 	main()

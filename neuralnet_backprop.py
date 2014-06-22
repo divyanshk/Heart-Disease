@@ -7,7 +7,8 @@ from pybrain.utilities           import percentError
 from pybrain.tools.shortcuts     import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules   import SigmoidLayer,SoftmaxLayer
-from sklearn import preprocessing
+from sklearn                     import preprocessing
+from sklearn.metrics             import f1_score
 
 in_data=np.genfromtxt('logit-train.csv', delimiter = ',')
 out_data = np.genfromtxt('logit-test.csv', delimiter = ',')
@@ -62,6 +63,10 @@ for i in range(20):
   print "Accuracy on training data is: %5.2f%%," % (100-trnresult), \
   "Accuracy on test data is: %5.2f%%." % (100-tstresult)
 
+average_label = ['micro','macro','weighted']
+for label in average_label: 
+  f1 = f1_score(y_test, trainer.testOnClassData(dataset=alltestdata), average=label)
+  print "f1 score (%s)" %label, "is ", f1
 #   trnresult = percentError(trainer.testOnClassData(dataset=alltraindata,verbose=True),y_train)
 #	tstresult = percentError(trainer.testOnClassData(dataset=alltestdata,verbose=True),y_test)
 #	print "epoch: %4d" % trainer.totalepochs, \

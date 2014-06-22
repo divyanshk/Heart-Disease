@@ -5,8 +5,9 @@ from scipy import *
 from scipy.linalg 				 import norm, pinv
 from pybrain.datasets            import ClassificationDataSet
 from pybrain.utilities           import percentError
-from sklearn import preprocessing
-from sklearn.cluster import KMeans
+from sklearn 					 import preprocessing
+from sklearn.cluster 			 import KMeans
+from sklearn.metrics    		 import f1_score
 
 class RBFNN:
 
@@ -127,6 +128,17 @@ def main():
    	
 	print "Accuracy on train data is: %5.2f%%," % (100-trnresult)
 	print "Accuracy on test data is: %5.2f%%," % (100-tstresult)
+
+	for x in range(len(y_test)):
+		if any(y_test[x]) == True:
+			y_test[x] = 1
+		else:
+			y_test[x] = 0
+	
+	average_label = ['micro','macro','weighted']
+	for label in average_label: 
+		f1 = f1_score(y_test, testdata_target, average=label)
+		print "f1 score (%s)" %label, "is ", f1
 
 if  __name__ == "__main__":
 	main()

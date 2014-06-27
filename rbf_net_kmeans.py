@@ -8,6 +8,7 @@ from pybrain.utilities           import percentError
 from sklearn 					 import preprocessing
 from sklearn.cluster 			 import KMeans
 from sklearn.metrics    		 import f1_score
+from math 						 import sqrt, pi
 
 class RBFNN:
 
@@ -23,7 +24,8 @@ class RBFNN:
 		# Calculates the gaussian bell/radial basis function, the center of each function and sigma/width is deffernet.
 		# Take care if sigma is zero!!
 		assert len(d) == self.indim
-		return exp(-norm(c-d)**2 / (2*sigma*sigma)  ) # the multiplication of 2 played a significant role
+		expo=exp(-float(norm(c-d)**2)/(2*sigma**2)) # the multiplication of 2 played a significant role
+		return expo
 
 	def _calcAct(self, X):
 	    # calculate activations of RBFs
@@ -94,6 +96,8 @@ def main():
 	#centers.shape = (numRBFCenters,13)
 	cluster_distance=kmeans.transform(alltraindata['input'])
 	#cluster_distance.shape = (152,10) and kmeans.labels_.shape = (152,)
+
+	#cluster_distance.shape = (152,50)
 
 	# Calculating the sigma/smoothness parameter of each Radial Basis Function
 	# It is the variance/standard deviation of the points of each cluster, thus giving a value for each RBFcenter

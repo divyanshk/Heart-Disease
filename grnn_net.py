@@ -5,8 +5,10 @@ from scipy import *
 from scipy.linalg 				 import pinv
 from pybrain.datasets            import ClassificationDataSet
 from pybrain.utilities           import percentError
-from sklearn 					 import preprocessing
+from sklearn 					 import preprocessing,metrics
 from sklearn.metrics    		 import f1_score
+import matplotlib.pyplot as plt
+
 class GRNN:
 
 	def __init__(self, indim, outdim):
@@ -68,8 +70,9 @@ def main():
 	# Every testing data sample is send to .predict along with the training data to get a predicted outcome, a (1,2) vector
 	for i,x in enumerate(alltestdata['input']):
 		Y_predicted[i] = net.predict(x, alltraindata['input'], alltraindata['target'], sigma)
+	y_score = Y_predicted[:,1]
 	Y_predicted = Y_predicted.argmax(axis=1) # Selects the class predicted
-
+	
 	tstresult = percentError(Y_predicted,alltestdata['class'])
 	print "Accuracy on test data is: %5.3f%%," % (100-tstresult)
 	
@@ -83,6 +86,25 @@ def main():
 	for label in average_label: 
 		f1 = f1_score(y_test, Y_predicted, average=label)
 		print "f1 score (%s)" %label, "is ", f1
+
+	print "ROC Curve generation..."
+	fpr, tpr, _ = metrics.roc_curve(y_test, y_score, pos_label=1)
+
+	roc_auc = metrics.auc(fpr,tpr)
+
+	print roc_auc
+
+	plt.figure()
+	plt.plot(fpr, tpr, label='ROC curve (area = %0.2f)' % roc_auc)
+	plt.plot([0, 1], [0, 1], 'k--')
+	plt.xlim([0.0, 1.0])
+	plt.ylim([0.0, 1.05])
+	plt.xlabel('False Positive Rate')
+	plt.ylabel('True Positive Rate')
+	plt.title('Receiver operating characteristic')
+	plt.legend(loc="lower right")
+	plt.show()
+	print "ROC Curve closed."
 
 if __name__ == '__main__':
 	main()
